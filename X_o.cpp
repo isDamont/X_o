@@ -3,11 +3,8 @@
 #include <iostream>
 #include <windows.h>
 
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-
 #include <random>
-#include <stdlib.h>
+#include <cstdlib>
 #include <chrono>
 
 
@@ -190,6 +187,7 @@ int draw(x_o& xo) {
             return 1;
         }
     }
+    return 0;
 }
 
 void init_field(x_o& xo) {
@@ -670,7 +668,7 @@ start:
     delete[] xo.field;
 }
 
-void bot_rand(x_o&);
+
 
 void __fastcall game(x_o& xo) {
 
@@ -712,8 +710,3 @@ void __fastcall game(x_o& xo) {
 }
 
 
-int main()
-{
-    x_o x;
-    game(x);
-}
