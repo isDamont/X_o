@@ -20,7 +20,7 @@ struct x_o {
     std::string buf;
     unsigned int did_a_turn = 0;
 
-    ~x_o(){field = nullptr;}
+    ~x_o(){field = nullptr; delete[] field; std::cout<<"ver. 0.2";}
 
     void x_o_clear();
 };
@@ -39,5 +39,6 @@ void start_game_bot(x_o& xo);
 void start_game_bot_bot(x_o& xo);
 void game(x_o& xo);
 void exit();
+bool repeat();
 
 #endif //X_O_HEAD_H
