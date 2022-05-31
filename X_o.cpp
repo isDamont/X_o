@@ -1,12 +1,4 @@
-﻿#define WIN32_LEAN_AND_MEAN
-
-#include <iostream>
-#include <windows.h>
-
-#include <random>
-#include <cstdlib>
-#include <chrono>
-#include "head.h"
+﻿#include "head.h"
 
 
 int32_t getRandomNum(int32_t min, int32_t max)

@@ -6,6 +6,11 @@
 #define X_O_HEAD_H
 
 #include <iostream>
+#include <Windows.h>
+#include <random>
+#include <cstdlib>
+#include <chrono>
+
 
 struct x_o {
     std::string* field{ nullptr };
