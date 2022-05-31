@@ -6,7 +6,7 @@
 #include <random>
 #include <cstdlib>
 #include <chrono>
-
+#include "head.h"
 
 
 int32_t getRandomNum(int32_t min, int32_t max)
@@ -17,21 +17,8 @@ int32_t getRandomNum(int32_t min, int32_t max)
     return dis(generator);
 }
 
-struct x_o {
-    std::string* field{ nullptr };
-    std::string player_1{ 'X' };
-    std::string player_2{ 'O' };
-    unsigned int X = 0;
-    unsigned int O = 0;
-    unsigned int t_o_g = 0;
-    std::string bot_id {"no"};
-    unsigned int figure = 0;
-    std::string bot;
-    std::string buf;
-    unsigned int did_a_turn = 0;
-};
 
-int inline finish(std::string* arr) {
+int finish(std::string* arr) {
     //string
 
     if (arr[0] == arr[1] && arr[0] == arr[2]) {
@@ -138,7 +125,7 @@ void vs_1(x_o& xo) {
     }
 }
 
-void __fastcall field_on_screen(x_o& xo) {
+void field_on_screen(x_o& xo) {
 
     //field on screen
 
@@ -318,8 +305,6 @@ start:
 
     delete[] xo.field;
 }
-
-void bot_rand(x_o&);
 
 void bot_x(x_o& xo) {
     
@@ -670,7 +655,7 @@ start:
 
 
 
-void __fastcall game(x_o& xo) {
+void game(x_o& xo) {
 
     unsigned int type = 1;
 

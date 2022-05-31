@@ -1,4 +1,4 @@
-#include "X_o.cpp"
+#include "head.h"
 
 int main()
 {
