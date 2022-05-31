@@ -19,6 +19,10 @@ struct x_o {
     std::string bot;
     std::string buf;
     unsigned int did_a_turn = 0;
+
+    ~x_o(){field = nullptr;}
+
+    void x_o_clear();
 };
 
 int32_t getRandomNum(int32_t min, int32_t max);
@@ -34,5 +38,6 @@ void bot_rand(x_o& xo);
 void start_game_bot(x_o& xo);
 void start_game_bot_bot(x_o& xo);
 void game(x_o& xo);
+void exit();
 
 #endif //X_O_HEAD_H
