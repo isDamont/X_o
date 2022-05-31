@@ -170,8 +170,12 @@ int draw(x_o& xo) {
             std::cout << "DRAW !!!" << std::endl;
             SetConsoleTextAttribute(hConsole, 7);
             system("pause");
-            system("cls");
-            return 1;
+            if(repeat()){
+                return 1;
+            }else{
+                xo.x_o_clear();
+                game(xo);
+            }
         }
     }
     return 0;
@@ -245,25 +249,16 @@ start:
             SetConsoleTextAttribute(hConsole, 7);
             system("pause");
             xo.X = xo.X + 1;
-            delete[] xo.field;
             system("cls");
 
-            int one = 3;
-            std::cout<<std::endl;
-            std::cout << "wanna play one more round? (0 - no; 1 - yes): ";
-            std::cin >> one;
-            while (one != 0){
-                if(one == 0){
-                    break;
-                }else if(one == 1){
+                if(repeat()){
                     goto start;
                 }else{
-                    std::cout<<std::endl;
-                    std::cout << "Enter 0 if you want to play ome more round or 1 if you don't";
+                    break;
                 }
             }
-        break;
-        }
+
+
 
         system("cls");
         vs_1(xo);
@@ -308,24 +303,13 @@ start:
             SetConsoleTextAttribute(hConsole, 7);
             system("pause");
             xo.O = xo.O + 1;
-            delete[] xo.field;
             system("cls");
 
-            int one = 3;
-            std::cout<<std::endl;
-            std::cout << "wanna play one more round? (0 - no; 1 - yes): ";
-            std::cin >> one;
-            while (one != 0){
-                if(one == 0){
-                    break;
-                }else if(one == 1){
-                    goto start;
-                }else{
-                    std::cout<<std::endl;
-                    std::cout << "Enter 0 if you want to play ome more round or 1 if you don't";
-                }
+            if(repeat()){
+                goto start;
+            }else{
+                break;
             }
-            break;
 
         }
 
@@ -478,7 +462,7 @@ random:
         goto random;
     }
 
-    if (xo.figure < 1 && xo.figure > 3) {
+    if (xo.figure < 1 || xo.figure > 3) {
         std::cout << "Wrong number !!!" << std::endl;
         goto wrong_num;
     }
@@ -536,7 +520,12 @@ start:
             system("pause");
             system("cls");
             xo.X = xo.X + 1;
-            goto start;
+
+            if(repeat()){
+                goto start;
+            }else{
+                break;
+            }
         }
 
         system("cls");
@@ -586,7 +575,12 @@ start:
             system("pause");
             system("cls");
             xo.O = xo.O + 1;
-            goto start;
+
+            if(repeat()){
+                goto start;
+            }else{
+                break;
+            }
         }
 
         system("cls");
@@ -595,7 +589,8 @@ start:
 
     }
 
-    delete[] xo.field;
+    xo.x_o_clear();
+    game(xo);
 }
 
 void start_game_bot_bot(x_o& xo) {
@@ -642,7 +637,12 @@ start:
             system("pause");
             system("cls");
             xo.X = xo.X + 1;
-            goto start;
+
+            if(repeat()){
+                goto start;
+            }else{
+                break;
+            }
         }
 
         system("cls");
@@ -674,7 +674,12 @@ start:
             system("pause");
             system("cls");
             xo.O = xo.O + 1;
-            goto start;
+
+            if(repeat()){
+                goto start;
+            }else{
+                break;
+            }
         }
 
         system("cls");
@@ -682,7 +687,8 @@ start:
         field_on_screen(xo);
     }
 
-    delete[] xo.field;
+    xo.x_o_clear();
+    game(xo);
 }
 
 
@@ -723,7 +729,6 @@ void game(x_o& xo) {
     default:
         std::cout << "This type of game is not exist yet !!!" << std::endl;
         system("pause");
-        game(xo);
         break;
     }
 
@@ -744,3 +749,15 @@ void exit() {
     std::cout<<"goodbye !!!"<<std::endl;
     system("pause");
 }
+
+bool repeat(){
+    bool while_ = true;
+    int one_more = 3;
+    while(while_){
+        std::cout<<std::endl;
+        std::cout << "wanna play one more round? (0 - no; 1 - yes): ";
+        std::cin >> one_more;
+        if(one_more==0 || one_more==1){while_ = false;}
+    }
+    return one_more != 0;
+};
