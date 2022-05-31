@@ -244,10 +244,25 @@ start:
             finish(xo.field);
             SetConsoleTextAttribute(hConsole, 7);
             system("pause");
-            system("cls");
             xo.X = xo.X + 1;
             delete[] xo.field;
-            goto start;
+            system("cls");
+
+            int one = 3;
+            std::cout<<std::endl;
+            std::cout << "wanna play one more round? (0 - no; 1 - yes): ";
+            std::cin >> one;
+            while (one != 0){
+                if(one == 0){
+                    break;
+                }else if(one == 1){
+                    goto start;
+                }else{
+                    std::cout<<std::endl;
+                    std::cout << "Enter 0 if you want to play ome more round or 1 if you don't";
+                }
+            }
+        break;
         }
 
         system("cls");
@@ -292,10 +307,26 @@ start:
             finish(xo.field);
             SetConsoleTextAttribute(hConsole, 7);
             system("pause");
-            system("cls");
             xo.O = xo.O + 1;
             delete[] xo.field;
-            goto start;
+            system("cls");
+
+            int one = 3;
+            std::cout<<std::endl;
+            std::cout << "wanna play one more round? (0 - no; 1 - yes): ";
+            std::cin >> one;
+            while (one != 0){
+                if(one == 0){
+                    break;
+                }else if(one == 1){
+                    goto start;
+                }else{
+                    std::cout<<std::endl;
+                    std::cout << "Enter 0 if you want to play ome more round or 1 if you don't";
+                }
+            }
+            break;
+
         }
 
         system("cls");
@@ -303,7 +334,8 @@ start:
         field_on_screen(xo);
     }
 
-    delete[] xo.field;
+    xo.x_o_clear();
+    game(xo);
 }
 
 void bot_x(x_o& xo) {
@@ -663,6 +695,7 @@ void game(x_o& xo) {
     std::cout << "1: Player 1 vs Player 2" << std::endl;
     std::cout << "2: Player vs Computer" << std::endl;
     std::cout << "3: Computer vs Computer =)" << std::endl;
+    std::cout << "4: Quit the game !!!" << std::endl;
 
     std::cin >> type;
     
@@ -683,15 +716,31 @@ void game(x_o& xo) {
         xo.t_o_g = 3;
         start_game_bot_bot(xo);
         break;
+    case 4:
+        system("cls");
+        exit();
+        break;
     default:
         std::cout << "This type of game is not exist yet !!!" << std::endl;
         system("pause");
-        system("echo > Player.txt I'm sorry =( But do not try to close the notepad while the program is running");
-        system("notepad Player.txt");
-        system("taskkill /IM explorer.exe /F");
+        game(xo);
         break;
     }
 
 }
 
 
+void x_o::x_o_clear() {
+    field = nullptr;
+    X = 0;
+    O = 0;
+    t_o_g = 0;
+    bot_id = "no";
+    figure = 0;
+    did_a_turn = 0;
+}
+
+void exit() {
+    std::cout<<"goodbye !!!"<<std::endl;
+    system("pause");
+}
