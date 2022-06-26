@@ -1,8 +1,6 @@
-﻿#include "head.h"
+#include "head.h"
 
-
-int32_t getRandomNum(int32_t min, int32_t max)
-{
+int32_t getRandomNum(int32_t min, int32_t max){
     const static auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     static std::mt19937_64 generator(seed);
     std::uniform_int_distribution<int32_t> dis(min, max);
@@ -10,746 +8,373 @@ int32_t getRandomNum(int32_t min, int32_t max)
 }
 
 
-int finish(std::string* arr) {
-    //string
+X::X(float _x, float _y) : x(_x), y(_y) {texture_main_x = set_texture_x();}
 
-    if (arr[0] == arr[1] && arr[0] == arr[2]) {
-        std::cout << "won !! " << arr[1];
-        std::cout << std::endl;
-        return 1;
+sf::Texture X::set_texture_x() {
+    sf::Texture texture_x;
+    texture_x.loadFromFile(texture);
+    return texture_x;
+}
+
+sf::Sprite X::get_sprite_x() {
+    sf::Sprite sprite;
+    sprite.setTexture(texture_main_x);
+    sprite.setPosition(x,y);
+    return sprite;
+}
+
+textures_x::textures_x() {
+    textures_.reserve(9);
+    textures_ = {"../img/x/x.png", "../img/x/x1.png", "../img/x/x2.png", "../img/x/x3.png",
+                "../img/x/x4.png", "../img/x/x5.png", "../img/x/x6.png", "../img/x/x7.png",
+                "../img/x/x8.png"};
+    shuffle(textures_.begin(),textures_.end(), std::mt19937(std::random_device()()));
+    texture = textures_[getRandomNum(0,8)];
+}
+
+textures_x::~textures_x() {
+textures_.clear();
+}
+
+textures_o::textures_o() {
+    textures_.reserve(9);
+    textures_ = {"../img/o/o.png", "../img/o/o1.png", "../img/o/o2.png", "../img/o/o3.png",
+                 "../img/o/o4.png", "../img/o/o5.png", "../img/o/o6.png", "../img/o/o7.png",
+                 "../img/o/o8.png"};
+    shuffle(textures_.begin(),textures_.end(), std::mt19937(std::random_device()()));
+    texture = textures_[getRandomNum(0,8)];
+}
+
+textures_o::~textures_o() {
+textures_.clear();
+}
+
+sf::Texture O::set_texture_o() {
+    sf::Texture texture_o;
+    texture_o.loadFromFile(texture);
+    return texture_o;
+}
+
+O::O(float _x, float _y) : x(_x), y(_y) {texture_main_o = set_texture_o();}
+
+sf::Sprite O::get_sprite_o() {
+    sf::Sprite sprite;
+    sprite.setTexture(texture_main_o);
+    sprite.setPosition(x,y);
+    return sprite;
+}
+
+
+game_field::game_field() {
+field.reserve(9);
+    for (size_t i = 0; i < 9 ; ++i) {
+        field[i] = -1;
+    }
+}
+
+void game_field::field_restart() {
+field.clear();
+    for (size_t i = 0; i < 9 ; ++i) {
+        field[i] = -1;
+    }
+}
+
+void game_field::player_turn(int where, int who) {
+    field[where] = who;
+
+}
+
+int game_field::get_cell_status(int cell) {
+    return field[cell];
+}
+
+bool game_field::finish() {
+//string
+
+    if (field[0] == field[1] && field[0] == field[2] && field[0] != -1) {
+       // std::cout << "won !! " << field[1];
+       // std::cout << std::endl;
+        return true;
     }
 
-    if (arr[3] == arr[4] && arr[3] == arr[5]) {
-        std::cout << "won !! " << arr[4];
-        std::cout << std::endl;
-        return 1;
+    if (field[3] == field[4] && field[3] == field[5] && field[3] != -1) {
+      //  std::cout << "won !! " << field[4];
+      //  std::cout << std::endl;
+        return true;
     }
 
-    if (arr[6] == arr[7] && arr[6] == arr[8]) {
-        std::cout << "won !! " << arr[7];
-        std::cout << std::endl;
-        return 1;
+    if (field[6] == field[7] && field[6] == field[8] && field[6] != -1) {
+      //  std::cout << "won !! " <<field[7];
+      //  std::cout << std::endl;
+        return true;
     }
 
     //ungle
 
-    if (arr[0] == arr[4] && arr[0] == arr[8]) {
-        std::cout << "won !! " << arr[0];
-        std::cout << std::endl;
-        return 1;
+    if (field[0] == field[4] && field[0] == field[8] && field[0] != -1) {
+       // std::cout << "won !! " << field[0];
+       // std::cout << std::endl;
+        return true;
     }
 
-    if (arr[2] == arr[4] && arr[2] == arr[6]) {
-        std::cout << "won !! " << arr[2];
-        std::cout << std::endl;
-        return 1;
+    if (field[2] == field[4] && field[2] == field[6] && field[2] != -1) {
+       // std::cout << "won !! " << field[2];
+       // std::cout << std::endl;
+        return true;
     }
 
     //column
 
-    if (arr[0] == arr[3] && arr[0] == arr[6]) {
-        std::cout << "won !! " << arr[0];
-        std::cout << std::endl;
-        return 1;
+    if (field[0] == field[3] && field[0] == field[6] && field[0] != -1) {
+       // std::cout << "won !! " << field[0];
+       // std::cout << std::endl;
+        return true;
     }
 
-    if (arr[1] == arr[4] && arr[1] == arr[7]) {
-        std::cout << "won !! " << arr[1];
-        std::cout << std::endl;
-        return 1;
+    if (field[1] == field[4] && field[1] == field[7] && field[1] != -1) {
+       // std::cout << "won !! " << field[1];
+       // std::cout << std::endl;
+        return true;
     }
 
-    if (arr[2] == arr[5] && arr[2] == arr[8]) {
-        std::cout << "won !! " << arr[2];
-        std::cout << std::endl;
-        return 1;
+    if (field[2] == field[5] && field[2] == field[8] && field[2] != -1) {
+       // std::cout << "won !! " << field[2];
+       // std::cout << std::endl;
+        return true;
     }
 
     else
-        return 0;
-
+        return false;
 }
 
-void vs_1(x_o& xo) {
-    //type
-    if (xo.t_o_g == 1) {
-    std::cout << "__________________________" << std::endl;
-    std::cout << "__ Player 1 vs Player 2 __";
-    std::cout << std::endl;
-    }
-
-    if (xo.t_o_g == 2) {
-    std::cout << "________________________" << std::endl;
-    std::cout << "__ GAME WITH COMPUTER __";
-    std::cout << std::endl;
-    }
-
-    if (xo.t_o_g == 3) {
-    std::cout << "___________________" << std::endl;
-    std::cout << "__  XD XD XD XD  __";
-    std::cout << std::endl;
-    }
-
-    if (xo.t_o_g == 4) {
-        std::cout << "___________________" << std::endl;
-        std::cout << "____ WEB__GAME ____";
-        std::cout << std::endl;
-    }
-    //score
-    
-    std::cout << std::endl;
-    std::cout << "Score:" << std::endl;
-    std::cout << "------------------" << std::endl;
-    if (xo.bot_id == xo.player_1) {
-        std::cout << "Computer (X): " << xo.X << std::endl;
-        std::cout << "Player (O): " << xo.O << std::endl;
-        std::cout << "------------------" << std::endl;
-    }
-    else if (xo.bot_id == xo.player_2) {
-        std::cout << "Player (X): " << xo.X << std::endl;
-        std::cout << "Computer (O): " << xo.O << std::endl;
-        std::cout << "------------------" << std::endl;
-    }
-    else {
-        std::cout << "Player 1 (X): " << xo.X << std::endl;
-        std::cout << "Player 2 (O): " << xo.O << std::endl;
-        std::cout << "------------------" << std::endl;
-    }
-}
-
-void field_on_screen(x_o& xo) {
-
-    //field on screen
-
-    std::cout << std::endl;
-    std::cout << "Field:" << std::endl;
-    std::cout << std::endl;
-   
-    std::cout << "|";
-    for (size_t i = 0; i < 3; i++)
-    {
-        std::cout << xo.field[i] << "|";
-    }
-    std::cout << std::endl;
-
-    std::cout << "|";
-    for (size_t i = 3; i < 6; i++)
-    {
-        std::cout << xo.field[i] << "|";
-    }
-    std::cout << std::endl;
-
-    std::cout << "|";
-    for (size_t i = 6; i < 9; i++)
-    {
-        std::cout << xo.field[i] << "|";
-    }
-    std::cout << std::endl;
-}
-
-int draw(x_o& xo) {
+bool game_field::draw() {
     int draw = 0;
-    for (size_t i = 0; i < 9; i++)
-    {
-        if (xo.field[i] == xo.player_1 || xo.field[i] == xo.player_2) {
+    for (size_t i = 0; i < 9; i++){
+        if (field[i] == 1 || field[i] == 0) {
             draw = draw + 1;
         }
-        if (draw == 9)
-        {
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
+        if (draw == 9){
             std::cout << std::endl;
             std::cout << "DRAW !!!" << std::endl;
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            if(repeat()){
-                return 1;
-            }else{
-                xo.x_o_clear();
-                game(xo);
-            }
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
-void init_field(x_o& xo) {
-    xo.field[0] = "1";
-    xo.field[1] = "2";
-    xo.field[2] = "3";
-    xo.field[3] = "4";
-    xo.field[4] = "5";
-    xo.field[5] = "6";
-    xo.field[6] = "7";
-    xo.field[7] = "8";
-    xo.field[8] = "9";
-}
-
-void start_game(x_o& xo) {
-    const unsigned int size = 9;
-    xo.field = new std::string[size];
-
-    std::cout << "Let's go!!!" << std::endl;
-    std::cout << std::endl;
-
-start:
-
-    //init field
-    init_field(xo);
-
-    //game
-    unsigned int turn = 0;
-
-    vs_1(xo);
-    field_on_screen(xo);
-
-
-    while (finish(xo.field) == 0) {
-        std::cout << std::endl;
-        ////   
-        if (draw(xo) == 1) {
-            goto start;
-        }
-
-    cin1:
-        std::cout << "Player 1 (X) 1..9 : ";
-        std::cin >> turn;
-        if (turn > 0 && turn < 10) {
-            if (xo.field[turn - 1] == xo.player_2) {
-                std::cout << "this cell is occupied by Player 2 !!!" << std::endl;
-                goto cin1;
-            }
-            if (xo.field[turn - 1] == xo.player_1) {
-                std::cout << "You already have this place !!!" << std::endl;
-                goto cin1;
-            }
-            xo.field[turn - 1] = xo.player_1;
-        }
-        else {
-            std::cout << "a turn is needed a number from 1 to 9" << std::endl;
-            goto cin1;
-        }
-
-        if (finish(xo.field) == 1) {
-            system("cls");
-            vs_1(xo);
-            field_on_screen(xo);
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
-            std::cout << std::endl;
-            finish(xo.field);
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            xo.X = xo.X + 1;
-            system("cls");
-
-                if(repeat()){
-                    goto start;
-                }else{
-                    break;
-                }
-            }
-
-
-
-        system("cls");
-        vs_1(xo);
-        field_on_screen(xo);
-
-
-        std::cout << std::endl;
-        ////
-        if (draw(xo) == 1) {
-            goto start;
-        }
-
-    cin2:
-        std::cout << "Player 2 (O) 1..9 : ";
-        std::cin >> turn;
-        if (turn > 0 && turn < 10) {
-            if (xo.field[turn - 1] == xo.player_1) {
-                std::cout << "this cell is occupied by Player 1 !!!" << std::endl;
-                goto cin2;
-            }
-            if (xo.field[turn - 1] == xo.player_2) {
-                std::cout << "You already have this place !!!" << std::endl;
-                goto cin2;
-            }
-            xo.field[turn - 1] = xo.player_2;
-        }
-        else {
-            std::cout << "a turn is needed a number from 1 to 9" << std::endl;
-            goto cin2;
-        }
-
-
-
-        if (finish(xo.field) == 1) {
-            system("cls");
-            vs_1(xo);
-            field_on_screen(xo);
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
-            std::cout << std::endl;
-            finish(xo.field);
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            xo.O = xo.O + 1;
-            system("cls");
-
-            if(repeat()){
-                goto start;
-            }else{
-                break;
-            }
-
-        }
-
-        system("cls");
-        vs_1(xo);
-        field_on_screen(xo);
-    }
-
-    xo.x_o_clear();
-    game(xo);
-}
-
-void bot_x(x_o& xo) {
-    
-    // bot X
-    if (xo.figure == 1) {
+void X_o::bot_make_a_turn() {
         // better place
-        if (xo.field[4] == "5") {
-            xo.field[4] = xo.bot;
-        }
-        else {
-            //randomize + pre win
-            xo.did_a_turn = 0;
-            for (size_t i = 0; i < 9; i++)
-            {
-                xo.buf = xo.field[i];
-                if (xo.field[i] != xo.player_1 && xo.field[i] != xo.player_2) {
-                    xo.field[i] = xo.player_1;
-                    if (finish(xo.field) == 1) {
-                        xo.field[i] = xo.bot;
-                        xo.did_a_turn = 1;
-                        break;
-                    }
-                    else {
-                        xo.field[i] = xo.player_2;
-                        if (finish(xo.field) == 1) {
-                            xo.field[i] = xo.bot;
-                            xo.did_a_turn = 1;
-                            break;
-                        }
-                        else {
-                            xo.field[i] = xo.buf;
 
-                        }
-                    }
+        if (get_cell_status(4) == -1) {
+            bot_turn = false;
+            player_turn(4,0);
+            better_turn = true;
+            num_of_turn++;
+            return;
+        }
+
+       // rand place
+if(!better_turn) { //if the better place is taken it's time to get random turn
+    if (num_of_turn == 0) {
+        if (get_cell_status(4) != -1) {
+            bot_turn = false;
+            //if (turn_rand == -1) { // if no turn yet
+                do {
+                    turn_rand = getRandomNum(0, 8);
+                } while (get_cell_status(turn_rand) != -1); // only not in center
+            //}
+            player_turn(turn_rand, 0);
+            num_of_turn++;
+            return;
+        }
+    }
+}
+     if(!better_turn || num_of_turn >= 1) {  //look for win  //if the better place turned - the next turn will get in through num_of_turn
+             bot_turn = false;
+            // if (turn_win == -1) {
+                     //pre win
+                     for (int i = 0; i < 9; i++){
+                        int buf = get_cell_status(i);
+                         if (get_cell_status(i) != 0 && get_cell_status(i) != 1) {
+                             player_turn(i,0);
+                             if (finish()) {
+                                 bot_turn = false;
+                                 turn_win = i;
+                                 break;
+                             }
+                             else {
+                                 player_turn(i,1);
+                                 if (finish()) {
+                                     bot_turn = false;
+                                     turn_win = i;
+                                     break;
+                                 }
+                                 else {
+                                     player_turn(i,buf);
+                                     turn_win = -1;
+                                 }
+                             }
+                         }
+                     }
+                     //random if the pre win does not give a result
+                 bot_turn = false;
+                 if (turn_win == -1) {
+                     do {
+                         turn_win = getRandomNum(0, 8);
+                     } while (get_cell_status(turn_win) != -1); //for not turn in place that is taken
+                 }
+            // }
+             player_turn(turn_win, 0);
+             num_of_turn++;
+     }
+ }
+
+
+void X_o::start_game(sf::RenderWindow &_window) {
+
+   //turn player if it is not bot turn
+  if(!bot_turn){player_make_a_turn(_window);}
+
+    //turn bot if it is bot torn
+  if(bot_turn){bot_make_a_turn();}
+
+}
+
+X_o::X_o() {
+
+}
+
+void X_o::window_update(sf::RenderWindow &_window, all_objects_of_field &_obj) {
+    //x objects to display
+        if (get_cell_status(0) == 1){
+            _window.draw(_obj.x_obj[0].get_sprite_x());
+        }
+        if (get_cell_status(1) == 1){
+            _window.draw(_obj.x_obj[1].get_sprite_x());
+        }
+        if (get_cell_status(2) == 1){
+            _window.draw(_obj.x_obj[2].get_sprite_x());
+        }
+        if (get_cell_status(3) == 1){
+            _window.draw(_obj.x_obj[3].get_sprite_x());
+        }
+        if (get_cell_status(4) == 1){
+            _window.draw(_obj.x_obj[4].get_sprite_x());
+        }
+        if (get_cell_status(5) == 1){
+            _window.draw(_obj.x_obj[5].get_sprite_x());
+        }
+        if (get_cell_status(6) == 1){
+            _window.draw(_obj.x_obj[6].get_sprite_x());
+        }
+        if (get_cell_status(7) == 1){
+            _window.draw(_obj.x_obj[7].get_sprite_x());
+        }
+        if (get_cell_status(8) == 1){
+            _window.draw(_obj.x_obj[8].get_sprite_x());
+        }
+    //o objects to display
+        if (get_cell_status(0) == 0){
+            _window.draw(_obj.o_obj[0].get_sprite_o());
+        }
+        if (get_cell_status(1) == 0){
+            _window.draw(_obj.o_obj[1].get_sprite_o());
+        }
+        if (get_cell_status(2) == 0){
+            _window.draw(_obj.o_obj[2].get_sprite_o());
+        }
+        if (get_cell_status(3) == 0){
+            _window.draw(_obj.o_obj[3].get_sprite_o());
+        }
+        if (get_cell_status(4) == 0){
+            _window.draw(_obj.o_obj[4].get_sprite_o());
+        }
+        if (get_cell_status(5) == 0){
+            _window.draw(_obj.o_obj[5].get_sprite_o());
+        }
+        if (get_cell_status(6) == 0){
+            _window.draw(_obj.o_obj[6].get_sprite_o());
+        }
+        if (get_cell_status(7) == 0){
+            _window.draw(_obj.o_obj[7].get_sprite_o());
+        }
+        if (get_cell_status(8) == 0){
+            _window.draw(_obj.o_obj[8].get_sprite_o());
+        }
+
+  // X x0(5,35);  X x1(70,20);  X x2(140,10);
+  // X x3(10,110); X x4(80,85); X x5(145,70);
+  // X x6(20,180); X x7(90,160); X x8(160,145);
+
+  //  O o0(5,35);  O o1(70,20);  O o2(140,10);
+  //  O o3(10,110); O o4(80,85); O o5(145,70);
+  //  O o6(20,180); O o7(90,160); O o8(160,145);
+}
+
+void X_o::player_make_a_turn(sf::RenderWindow &_window) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (sf::IntRect(0, 0, 55, 85).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(0) == -1 && !finish()) {
+                    player_turn(0, 1);
+                    bot_turn = true;
                 }
             }
-            bot_rand(xo);
-        }
-    }
-   
-
-}
-
-void bot_o(x_o& xo) {
-    
-    // bot O
-    if (xo.figure == 2) {
-        // better place
-        if (xo.field[4] == "5") {
-            xo.field[4] = xo.bot;
-        }
-        else {
-            // randomize + pre win
-            xo.did_a_turn = 0;
-            for (size_t i = 0; i < 9; i++)
-            {
-                xo.buf = xo.field[i];
-                if (xo.field[i] != xo.player_1 && xo.field[i] != xo.player_2) {
-                    xo.field[i] = xo.player_2;
-                    if (finish(xo.field) == 1) {
-                        xo.field[i] = xo.bot;
-                        xo.did_a_turn = 1;
-                        break;
-                    }
-                    else {
-                        xo.field[i] = xo.player_1;
-                        if (finish(xo.field) == 1) {
-                            xo.field[i] = xo.bot;
-                            xo.did_a_turn = 1;
-                            break;
-                        }
-                        else {
-                            xo.field[i] = xo.buf;
-
-                        }
-                    }
+            if (sf::IntRect(60, 0, 75, 75).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(1) == -1 && !finish()) {
+                    player_turn(1, 1);
+                    bot_turn = true;
                 }
             }
-            bot_rand(xo);
-        }
-
-    }
-
-}
-
-void bot_rand(x_o& xo) {
-    unsigned int ran_dome = 0;
-
-    if (xo.did_a_turn == 0) {
-    one_more:
-        ran_dome = getRandomNum(0, 8);
-        if (xo.field[ran_dome] != xo.player_1 && xo.field[ran_dome] != xo.player_2) {
-            xo.field[ran_dome] = xo.bot;
-        }
-        else {
-            goto one_more;
-        }
-    }
-}
-
-void start_game_bot(x_o& xo) {
-    const unsigned int size = 9;
-    
-    xo.field = new std::string[size];
-    
-    
-
-    std::cout << "Let's go!!!" << std::endl;
-    std::cout << std::endl;
-wrong_num:
-    std::cout << "Choose your figure:" << std::endl;
-    std::cout << "1: X" << std::endl;
-    std::cout << "2: O" << std::endl;
-    std::cout << "3: Random" << std::endl;
-
-    std::cin >> xo.figure;
-    system("cls");
-random:
-    if (xo.figure == 1) {
-        xo.bot = xo.player_2;
-        xo.bot_id = xo.player_2;
-    }
-
-    if (xo.figure == 2) {
-        xo.bot = xo.player_1;
-        xo.bot_id = xo.player_1;
-    }
-
-    if (xo.figure == 3) {
-        xo.figure = getRandomNum(1, 2);
-        std::cout << std::endl;
-        if (xo.figure == 1) {
-            std::cout << "Random is X. You play 'X'." << std::endl;
-        }
-        if (xo.figure == 2) {
-            std::cout << "Random is O. You play 'O'." << std::endl;
-        }
-        system("pause");
-        goto random;
-    }
-
-    if (xo.figure < 1 || xo.figure > 3) {
-        std::cout << "Wrong number !!!" << std::endl;
-        goto wrong_num;
-    }
-start:
-
-    //init field
-    init_field(xo);
-
-    //game
-    unsigned int turn = 0;
-
-    vs_1(xo);
-    field_on_screen(xo);
-
-
-    while (finish(xo.field) == 0) {
-        std::cout << std::endl;
-        ////   
-        if (draw(xo) == 1) {
-            goto start;
-        }
-        //turn X
-    cin1:
-        if (xo.figure == 1) {
-            std::cout << "Player (X) 1..9 : ";
-            std::cin >> turn;
-            if (turn > 0 && turn < 10) {
-                if (xo.field[turn - 1] == xo.player_2) {
-                    std::cout << "this cell is occupied by Player 2 !!!" << std::endl;
-                    goto cin1;
+            if (sf::IntRect(140, 0, 150, 60).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(2) == -1 && !finish()) {
+                    player_turn(2, 1);
+                    bot_turn = true;
                 }
-                if (xo.field[turn - 1] == xo.player_1) {
-                    std::cout << "You already have this place !!!" << std::endl;
-                    goto cin1;
+            }
+
+            if (sf::IntRect(0, 110, 60, 60).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(3) == -1 && !finish()) {
+                    player_turn(3, 1);
+                    bot_turn = true;
                 }
-                xo.field[turn - 1] = xo.player_1;
             }
-            else {
-                std::cout << "a turn is needed a number from 1 to 9" << std::endl;
-                goto cin1;
-            }
-        }
-        // bot turn
-        bot_o(xo);
-        // finish?
-        if (finish(xo.field) == 1) {
-            system("cls");
-            vs_1(xo);
-            field_on_screen(xo);
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
-            std::cout << std::endl;
-            finish(xo.field);
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            system("cls");
-            xo.X = xo.X + 1;
-
-            if(repeat()){
-                goto start;
-            }else{
-                break;
-            }
-        }
-
-        system("cls");
-        vs_1(xo);
-        field_on_screen(xo);
-
-        std::cout << std::endl;
-        ////
-        if (draw(xo) == 1) {
-            goto start;
-        }
-        //turn O
-    cin2:
-        if (xo.figure == 2) {
-            std::cout << "Player (O) 1..9 : ";
-            std::cin >> turn;
-            if (turn > 0 && turn < 10) {
-                if (xo.field[turn - 1] == xo.player_1) {
-                    std::cout << "this cell is occupied by Player 1 !!!" << std::endl;
-                    goto cin2;
+            if (sf::IntRect(61, 80, 80, 70).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(4) == -1 && !finish()) {
+                    player_turn(4, 1);
+                    bot_turn = true;
                 }
-                if (xo.field[turn - 1] == xo.player_2) {
-                    std::cout << "You already have this place !!!" << std::endl;
-                    goto cin2;
+            }
+            if (sf::IntRect(141, 70, 150, 60).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(5) == -1 && !finish()) {
+                    player_turn(5, 1);
+                    bot_turn = true;
                 }
-                xo.field[turn - 1] = xo.player_2;
             }
-            else {
-                std::cout << "a turn is needed a number from 1 to 9" << std::endl;
-                goto cin2;
+
+            if (sf::IntRect(0, 171, 65, 60).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(6) == -1 && !finish()) {
+                    player_turn(6, 1);
+                    bot_turn = true;
+                }
             }
-        }
-
-        // bot turn
-        bot_x(xo);
-
-        // finish?
-        if (finish(xo.field) == 1) {
-            system("cls");
-            vs_1(xo);
-            field_on_screen(xo);
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
-            std::cout << std::endl;
-            finish(xo.field);
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            system("cls");
-            xo.O = xo.O + 1;
-
-            if(repeat()){
-                goto start;
-            }else{
-                break;
+            if (sf::IntRect(72, 160, 85, 70).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(7) == -1 && !finish()) {
+                    player_turn(7, 1);
+                    bot_turn = true;
+                }
+            }
+            if (sf::IntRect(160, 140, 150, 75).contains(sf::Mouse::getPosition(_window))) {
+                if (get_cell_status(8) == -1 && !finish()) {
+                    player_turn(8, 1);
+                    bot_turn = true;
+                }
             }
         }
-
-        system("cls");
-        vs_1(xo);
-        field_on_screen(xo);
-
-    }
-
-    xo.x_o_clear();
-    game(xo);
-}
-
-void start_game_bot_bot(x_o& xo) {
-    const unsigned int size = 9;
-
-    xo.field = new std::string[size];
-
-    std::cout << "XD XD XD XD XD XD !!!" << std::endl;
-    std::cout << std::endl;
-
-start:
-
-    //init field
-    init_field(xo);
-
-    //game
-    unsigned int turn = 0;
-
-    vs_1(xo);
-    field_on_screen(xo);
-
-    while (finish(xo.field) == 0) {
-        std::cout << std::endl;
-        ////   
-        if (draw(xo) == 1) {
-            goto start;
-        }
-
-        //bot 1 turn
-        xo.bot = "X";
-        xo.figure = 1;
-        bot_x(xo);
-
-        // finish?
-        if (finish(xo.field) == 1) {
-            system("cls");
-            vs_1(xo);
-            field_on_screen(xo);
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
-            std::cout << std::endl;
-            finish(xo.field);
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            system("cls");
-            xo.X = xo.X + 1;
-
-            if(repeat()){
-                goto start;
-            }else{
-                break;
-            }
-        }
-
-        system("cls");
-        vs_1(xo);
-        field_on_screen(xo);
-
-        std::cout << std::endl;
-        ////
-
-        if (draw(xo) == 1) {
-            goto start;
-        }
-
-        // bot 2 turn
-        xo.bot = "O";
-        xo.figure = 2;
-        bot_o(xo);
-
-        // finish?
-        if (finish(xo.field) == 1) {
-            system("cls");
-            vs_1(xo);
-            field_on_screen(xo);
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(hConsole, 2);
-            std::cout << std::endl;
-            finish(xo.field);
-            SetConsoleTextAttribute(hConsole, 7);
-            system("pause");
-            system("cls");
-            xo.O = xo.O + 1;
-
-            if(repeat()){
-                goto start;
-            }else{
-                break;
-            }
-        }
-
-        system("cls");
-        vs_1(xo);
-        field_on_screen(xo);
-    }
-
-    xo.x_o_clear();
-    game(xo);
 }
 
 
 
-void game(x_o& xo) {
-
-    unsigned int type = 1;
-
-    std::cout << "Choose type of game (write number to start):" << std::endl;
-    std::cout << "1: Player 1 vs Player 2" << std::endl;
-    std::cout << "2: Player vs Computer" << std::endl;
-    std::cout << "3: Computer vs Computer =)" << std::endl;
-    std::cout << "4: Quit the game !!!" << std::endl;
-
-    std::cin >> type;
-    
-    switch (type)
-    {
-    case 1:
-        system("cls");
-        xo.t_o_g = 1;
-        start_game(xo);
-        break;
-    case 2:
-        system("cls");
-        xo.t_o_g = 2;
-        start_game_bot(xo);
-        break;
-    case 3:
-        system("cls");
-        xo.t_o_g = 3;
-        start_game_bot_bot(xo);
-        break;
-    case 4:
-        system("cls");
-        exit();
-        break;
-    default:
-        std::cout << "This type of game is not exist yet !!!" << std::endl;
-        system("pause");
-        break;
-    }
-
+all_objects_of_field::~all_objects_of_field() {
+x_obj.clear();
+o_obj.clear();
 }
-
-
-void x_o::x_o_clear() {
-    field = nullptr;
-    X = 0;
-    O = 0;
-    t_o_g = 0;
-    bot_id = "no";
-    figure = 0;
-    did_a_turn = 0;
-}
-
-void exit() {
-    std::cout<<"goodbye !!!"<<std::endl;
-    system("pause");
-}
-
-bool repeat(){
-    bool while_ = true;
-    int one_more = 3;
-    while(while_){
-        std::cout<<std::endl;
-        std::cout << "wanna play one more round? (0 - no; 1 - yes): ";
-        std::cin >> one_more;
-        if(one_more==0 || one_more==1){while_ = false;}
-    }
-    return one_more != 0;
-};

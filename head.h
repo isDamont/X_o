@@ -1,49 +1,104 @@
 //
-// Created by isDamont on 31.05.2022.
+// Created by isDamont on 13.06.2022.
 //
 
-#ifndef X_O_HEAD_H
-#define X_O_HEAD_H
+#ifndef X_o_HEAD_H
+#define X_o_HEAD_H
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
-#include <Windows.h>
+#include <vector>
 #include <random>
-#include <cstdlib>
 #include <chrono>
 
 
-struct x_o {
-    std::string* field{ nullptr };
-    std::string player_1{ 'X' };
-    std::string player_2{ 'O' };
-    unsigned int X = 0;
-    unsigned int O = 0;
-    unsigned int t_o_g = 0;
-    std::string bot_id {"no"};
-    unsigned int figure = 0;
-    std::string bot;
-    std::string buf;
-    unsigned int did_a_turn = 0;
-
-    ~x_o(){field = nullptr; delete[] field; std::cout<<"ver. 0.2";}
-
-    void x_o_clear();
+struct textures_x{
+    std::string texture;
+    std::vector<std::string> textures_;
+    textures_x();
+    ~textures_x();
 };
 
-int32_t getRandomNum(int32_t min, int32_t max);
-int finish(std::string* arr);
-void vs_1(x_o& xo);
-void field_on_screen(x_o& xo);
-int draw(x_o& xo);
-void init_field(x_o& xo);
-void start_game(x_o& xo);
-void bot_x(x_o& xo);
-void bot_o(x_o& xo);
-void bot_rand(x_o& xo);
-void start_game_bot(x_o& xo);
-void start_game_bot_bot(x_o& xo);
-void game(x_o& xo);
-void exit();
-bool repeat();
+class X : textures_x{
+private:
+    float x;
+    float y;
 
-#endif //X_O_HEAD_H
+    sf::Texture texture_main_x;
+    sf::Texture set_texture_x();
+public:
+    X(float _x, float _y);
+    sf::Sprite get_sprite_x();
+};
+
+struct textures_o{
+    std::string texture;
+    std::vector<std::string> textures_;
+    textures_o();
+    ~textures_o();
+};
+
+class O : textures_o{
+private:
+    float x;
+    float y;
+
+    sf::Texture texture_main_o;
+    sf::Texture set_texture_o();
+public:
+    O(float _x, float _y);
+    sf::Sprite get_sprite_o();
+};
+
+struct all_objects_of_field {
+//x
+    std::vector<X> x_obj = { X(5,35),  X(70,20),  X(140,10), X(10,110), X(80,85), X(145,70), X(20,180),
+                             X(90,160), X(160,145)};
+//o
+    std::vector<O> o_obj = {O(5,35),  O(70,20),  O(140,10),O(10,110), O(80,85), O(145,70), O(20,180),
+                            O(90,160), O(160,145)};
+    ~all_objects_of_field();
+};
+
+struct bot{
+    bool bot_turn = false;
+    int turn_rand = -1;
+    int turn_win = -1;
+    bool better_turn = false;
+    int num_of_turn = 0;
+};
+
+class game_field : public bot{
+public:
+    game_field();
+    void field_restart();
+    void player_turn(int where, int who);
+    int get_cell_status(int cell);
+    bool finish();
+    bool draw();
+
+private:
+   std::vector<int> field;
+
+};
+
+
+class X_o : public game_field{
+public:
+    X_o();
+    void start_game(sf::RenderWindow &_window);
+    void window_update(sf::RenderWindow& _window, all_objects_of_field &_obj);
+    void player_make_a_turn(sf::RenderWindow &_window);
+
+    void bot_make_a_turn();
+
+
+};
+
+
+
+
+
+
+int32_t getRandomNum(int32_t min, int32_t max);
+#endif //X_o_HEAD_H
