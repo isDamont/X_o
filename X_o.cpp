@@ -240,9 +240,7 @@ void X_o::start_game(sf::RenderWindow &_window) {
 
 }
 
-X_o::X_o() {
-
-}
+X_o::X_o() = default;
 
 void X_o::window_update(sf::RenderWindow &_window, all_objects_of_field &_obj) {
     //x objects to display
@@ -378,3 +376,53 @@ all_objects_of_field::~all_objects_of_field() {
 x_obj.clear();
 o_obj.clear();
 }
+
+menu::menu() = default;
+
+void menu::buttons_on_the_screen(sf::RenderWindow &_window) {
+    sf::Sprite play = button_play();
+    sf::Sprite exit = button_exit();
+
+_window.clear();
+
+    ///// если наехали на кнопку мышкой меняем цвет////////
+    if (sf::IntRect(70, 20, 20, 20).contains(sf::Mouse::getPosition(_window))) { play.setColor(sf::Color::Blue); }
+    if (sf::IntRect(90, 160, 20, 20).contains(sf::Mouse::getPosition(_window))) { exit.setColor(sf::Color::Blue); }
+    ////////////обработчик нажатия на кнопку///////
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if (sf::IntRect(70, 20, 20, 20).contains(sf::Mouse::getPosition(_window))) {
+            _switch = 1;
+            look_for_action = true;
+        }
+        if (sf::IntRect(90, 160, 20, 20).contains(sf::Mouse::getPosition(_window))) {
+            _switch = 2;
+            look_for_action = true;
+        }
+    }
+
+_window.draw(play);
+_window.draw(exit);
+
+_window.display();
+
+}
+
+sf::Sprite menu::button_play() {
+    sf::Texture play;
+    play.loadFromFile("../img/x/x1.png");
+    sf::Sprite play_sprite;
+    play_sprite.setTexture(play);
+    play_sprite.setPosition(70,20);
+    return play_sprite;
+}
+
+sf::Sprite menu::button_exit() {
+    sf::Texture exit;
+    exit.loadFromFile("../img/o/o.png");
+    sf::Sprite exit_sprite;
+    exit_sprite.setTexture(exit);
+    exit_sprite.setPosition(90,160);
+    return exit_sprite;
+}
+

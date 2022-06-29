@@ -95,6 +95,19 @@ public:
 
 };
 
+class menu{
+public:
+    menu();
+    static void buttons_on_the_screen(sf::RenderWindow &_window);
+
+    inline static unsigned _switch = 0;
+    inline static bool look_for_action = false;
+private:
+    static sf::Sprite button_play();
+    static sf::Sprite button_exit();
+
+};
+
 
 
 
