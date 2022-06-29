@@ -230,13 +230,13 @@ if(!better_turn) { //if the better place is taken it's time to get random turn
  }
 
 
-void X_o::start_game(sf::RenderWindow &_window) {
+void X_o::start_game(sf::RenderWindow &_window, int thinking) {
 
    //turn player if it is not bot turn
   if(!bot_turn){player_make_a_turn(_window);}
 
     //turn bot if it is bot torn
-  if(bot_turn){bot_make_a_turn();}
+  if(bot_turn && thinking == 9){bot_make_a_turn();}
 
 }
 
@@ -385,21 +385,21 @@ void menu::buttons_on_the_screen(sf::RenderWindow &_window) {
 
 _window.clear();
 
-    ///// если наехали на кнопку мышкой меняем цвет////////
-    if (sf::IntRect(70, 20, 20, 20).contains(sf::Mouse::getPosition(_window))) { play.setColor(sf::Color::Blue); }
-    if (sf::IntRect(90, 160, 20, 20).contains(sf::Mouse::getPosition(_window))) { exit.setColor(sf::Color::Blue); }
-    ////////////обработчик нажатия на кнопку///////
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        if (sf::IntRect(70, 20, 20, 20).contains(sf::Mouse::getPosition(_window))) {
+    if (sf::IntRect(70, 20, 20, 20).contains(sf::Mouse::getPosition(_window))) {
+        play.setColor(sf::Color::Blue);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             _switch = 1;
             look_for_action = true;
         }
-        if (sf::IntRect(90, 160, 20, 20).contains(sf::Mouse::getPosition(_window))) {
+    }
+    if (sf::IntRect(90, 160, 20, 20).contains(sf::Mouse::getPosition(_window))) {
+        exit.setColor(sf::Color::Blue);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             _switch = 2;
             look_for_action = true;
         }
     }
+
 
 _window.draw(play);
 _window.draw(exit);
@@ -410,7 +410,7 @@ _window.display();
 
 sf::Sprite menu::button_play() {
     sf::Texture play;
-    play.loadFromFile("../img/x/x1.png");
+    play.loadFromFile("../img/x/x.png");
     sf::Sprite play_sprite;
     play_sprite.setTexture(play);
     play_sprite.setPosition(70,20);

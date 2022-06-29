@@ -86,7 +86,7 @@ private:
 class X_o : public game_field{
 public:
     X_o();
-    void start_game(sf::RenderWindow &_window);
+    void start_game(sf::RenderWindow &_window, int thinking);
     void window_update(sf::RenderWindow& _window, all_objects_of_field &_obj);
     void player_make_a_turn(sf::RenderWindow &_window);
 
@@ -102,6 +102,7 @@ public:
 
     inline static unsigned _switch = 0;
     inline static bool look_for_action = false;
+    inline static bool run_game = false;
 private:
     static sf::Sprite button_play();
     static sf::Sprite button_exit();
