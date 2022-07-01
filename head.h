@@ -83,33 +83,26 @@ private:
 };
 
 
-class X_o : public game_field{
-public:
+struct X_o : public game_field{
     X_o();
     void start_game(sf::RenderWindow &_window, int thinking);
     void window_update(sf::RenderWindow& _window, all_objects_of_field &_obj);
     void player_make_a_turn(sf::RenderWindow &_window);
-
+    static void wait_for_menu();
     void bot_make_a_turn();
-
-
 };
 
-class menu{
-public:
+
+struct menu : public game_field{
     menu();
     static void buttons_on_the_screen(sf::RenderWindow &_window);
-
     inline static unsigned _switch = 0;
     inline static bool look_for_action = false;
     inline static bool run_game = false;
-private:
-    static sf::Sprite button_play();
-    static sf::Sprite button_exit();
+    inline static bool _continue = false;
+    inline static bool field_was_restarted = false;
 
 };
-
-
 
 
 

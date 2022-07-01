@@ -162,6 +162,19 @@ bool game_field::draw() {
     return false;
 }
 
+void X_o::wait_for_menu(){
+    if (menu::look_for_action){
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        menu::look_for_action = false;
+        menu::_switch = 0;
+        }
+    }else{
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+            menu::look_for_action = true;
+        }
+    }
+}
+
 void X_o::bot_make_a_turn() {
         // better place
 
@@ -237,6 +250,10 @@ void X_o::start_game(sf::RenderWindow &_window, int thinking) {
 
     //turn bot if it is bot torn
   if(bot_turn && thinking == 9){bot_make_a_turn();}
+
+    //wait for Esc button to go to menu
+
+    wait_for_menu();
 
 }
 
@@ -379,50 +396,75 @@ o_obj.clear();
 
 menu::menu() = default;
 
+
 void menu::buttons_on_the_screen(sf::RenderWindow &_window) {
-    sf::Sprite play = button_play();
-    sf::Sprite exit = button_exit();
+    //set texture to play button
+    sf::Texture play_texture;
+    play_texture.loadFromFile("../img/buttons/new_game.png");
+    sf::Sprite play_button;
+    play_button.setTexture(play_texture);
+    play_button.setPosition(55,88);
+
+
+    //set texture to exit button
+    sf::Texture exit_texture;
+    exit_texture.loadFromFile("../img/buttons/quit.png");
+    sf::Sprite exit_button;
+    exit_button.setTexture(exit_texture);
+    exit_button.setPosition(70,140);
+
+    //bg
+    sf::Texture white_bg;
+    white_bg.loadFromFile("../img/white.png");
+    sf::Sprite bg_menu;
+    bg_menu.setTexture(white_bg);
+
+    //set texture to continue button
+    sf::Texture continue_texture;
+    continue_texture.loadFromFile("../img/buttons/continue.png");
+    sf::Sprite continue_button;
+    continue_button.setTexture(continue_texture);
+    continue_button.setPosition(55,40);
 
 _window.clear();
+_window.draw(bg_menu);
 
-    if (sf::IntRect(70, 20, 20, 20).contains(sf::Mouse::getPosition(_window))) {
-        play.setColor(sf::Color::Blue);
+if (_continue) {
+    if (sf::IntRect(55, 40, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+        continue_button.setColor(sf::Color::Green);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             _switch = 1;
             look_for_action = true;
+
         }
     }
-    if (sf::IntRect(90, 160, 20, 20).contains(sf::Mouse::getPosition(_window))) {
-        exit.setColor(sf::Color::Blue);
+}else{
+    continue_button.setColor(sf::Color::Red);
+}
+
+    if (sf::IntRect(55, 88, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+        play_button.setColor(sf::Color::Green);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             _switch = 2;
+            menu::field_was_restarted = false;
+            look_for_action = true;
+            _continue = true;
+        }
+    }
+    if (sf::IntRect(70, 140, 100, 70).contains(sf::Mouse::getPosition(_window))) {
+       exit_button.setColor(sf::Color::Cyan);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            _switch = 3;
             look_for_action = true;
         }
     }
 
 
-_window.draw(play);
-_window.draw(exit);
+_window.draw(play_button);
+_window.draw(exit_button);
+_window.draw(continue_button);
 
 _window.display();
 
-}
-
-sf::Sprite menu::button_play() {
-    sf::Texture play;
-    play.loadFromFile("../img/x/x.png");
-    sf::Sprite play_sprite;
-    play_sprite.setTexture(play);
-    play_sprite.setPosition(70,20);
-    return play_sprite;
-}
-
-sf::Sprite menu::button_exit() {
-    sf::Texture exit;
-    exit.loadFromFile("../img/o/o.png");
-    sf::Sprite exit_sprite;
-    exit_sprite.setTexture(exit);
-    exit_sprite.setPosition(90,160);
-    return exit_sprite;
 }
 
