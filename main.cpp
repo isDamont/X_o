@@ -5,6 +5,12 @@ int main(){
     sf::RenderWindow window(sf::VideoMode(240, 240), "X_o by isDamont", sf::Style::Close);
     window.setVerticalSyncEnabled(true);
 
+    sf::Font font;
+    font.loadFromFile("../ttf/cyrilic_old.TTF");
+    sf::Text text("", font, 20);
+    text.setColor(sf::Color::Black);
+    text.setStyle(sf::Text::Bold);
+
     sf::Clock think;
     sf::Clock clock;
 bool time_now = false;
@@ -44,6 +50,7 @@ if (!menu::look_for_action){
             case 2:{
 
                 if(!menu::field_was_restarted){
+                    game -> restart_player_score();
                     game -> field_restart();
                     game -> bot_turn = false;
                     menu::field_was_restarted = true;
@@ -70,10 +77,12 @@ if (!menu::look_for_action){
                 if(menu::run_game){game -> start_game(window, thinking);}
 
                 game -> window_update(window, obj);
+                game -> score_on_screen(text,window);
 
                 if (game -> finish()){
-                    std::cout<< "Finish !!"<<std::endl;
-                    menu::field_was_restarted = false;
+                    if(game -> get_player_won_status()){game -> plus_player_score(); std::cout<< "Player WON !!"<<std::endl;}
+                    else if(!game -> get_player_won_status()){game -> minus_player_score(); std::cout<< "Bot WON !!"<<std::endl;}
+                    game -> field_restart();
                     game -> bot_turn = false;
                     time_now = false;
                     menu::run_game = false;
@@ -81,7 +90,7 @@ if (!menu::look_for_action){
 
                 if (game -> draw()){
                     std::cout<< "draw !!"<<std::endl;
-                    menu::field_was_restarted = false;
+                    game -> field_restart();
                     game -> bot_turn = false;
                     time_now = false;
                     menu::run_game = false;

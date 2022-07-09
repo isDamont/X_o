@@ -10,6 +10,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <sstream>
 
 
 struct textures_x{
@@ -74,11 +75,18 @@ public:
     void field_restart();
     void player_turn(int where, int who);
     int get_cell_status(int cell);
+    [[nodiscard]] int get_player_score() const;
+    [[nodiscard]] bool get_player_won_status() const;
+    void plus_player_score();
+    void minus_player_score();
+    void restart_player_score();
     bool finish();
     bool draw();
 
 private:
    std::vector<int> field;
+   int player_score;
+   bool player_won;
 
 };
 
@@ -90,6 +98,7 @@ struct X_o : public game_field{
     void player_make_a_turn(sf::RenderWindow &_window);
     static void wait_for_menu();
     void bot_make_a_turn();
+    void score_on_screen(sf::Text & _text, sf::RenderWindow &_window);
 };
 
 
@@ -100,7 +109,7 @@ struct menu : public game_field{
     inline static bool look_for_action = false;
     inline static bool run_game = false;
     inline static bool _continue = false;
-    inline static bool field_was_restarted = false;
+    inline static bool field_was_restarted = true;
 
 };
 

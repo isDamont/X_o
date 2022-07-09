@@ -70,6 +70,8 @@ field.reserve(9);
     for (size_t i = 0; i < 9 ; ++i) {
         field[i] = -1;
     }
+    player_won = false;
+    player_score = 0;
 }
 
 void game_field::field_restart() {
@@ -92,54 +94,86 @@ bool game_field::finish() {
 //string
 
     if (field[0] == field[1] && field[0] == field[2] && field[0] != -1) {
-       // std::cout << "won !! " << field[1];
-       // std::cout << std::endl;
+        //check for winner
+       if (field[1] == 1){
+           player_won = true;
+       } else if (field[1] == 0){
+           player_won = false;
+       }
         return true;
     }
 
     if (field[3] == field[4] && field[3] == field[5] && field[3] != -1) {
-      //  std::cout << "won !! " << field[4];
-      //  std::cout << std::endl;
+        //check for winner
+        if (field[4] == 1){
+            player_won = true;
+        } else if (field[4] == 0){
+            player_won = false;
+        }
         return true;
     }
 
     if (field[6] == field[7] && field[6] == field[8] && field[6] != -1) {
-      //  std::cout << "won !! " <<field[7];
-      //  std::cout << std::endl;
+        //check for winner
+        if (field[7] == 1){
+            player_won = true;
+        } else if (field[7] == 0){
+            player_won = false;
+        }
         return true;
     }
 
     //ungle
 
     if (field[0] == field[4] && field[0] == field[8] && field[0] != -1) {
-       // std::cout << "won !! " << field[0];
-       // std::cout << std::endl;
+        //check for winner
+        if (field[0] == 1){
+            player_won = true;
+        } else if (field[0] == 0){
+            player_won = false;
+        }
         return true;
     }
 
     if (field[2] == field[4] && field[2] == field[6] && field[2] != -1) {
-       // std::cout << "won !! " << field[2];
-       // std::cout << std::endl;
+        //check for winner
+        if (field[2] == 1){
+            player_won = true;
+        } else if (field[2] == 0){
+            player_won = false;
+        }
         return true;
     }
 
     //column
 
     if (field[0] == field[3] && field[0] == field[6] && field[0] != -1) {
-       // std::cout << "won !! " << field[0];
-       // std::cout << std::endl;
+        //check for winner
+        if (field[0] == 1){
+            player_won = true;
+        } else if (field[0] == 0){
+            player_won = false;
+        }
         return true;
     }
 
     if (field[1] == field[4] && field[1] == field[7] && field[1] != -1) {
-       // std::cout << "won !! " << field[1];
-       // std::cout << std::endl;
+        //check for winner
+        if (field[1] == 1){
+            player_won = true;
+        } else if (field[1] == 0){
+            player_won = false;
+        }
         return true;
     }
 
     if (field[2] == field[5] && field[2] == field[8] && field[2] != -1) {
-       // std::cout << "won !! " << field[2];
-       // std::cout << std::endl;
+        //check for winner
+        if (field[2] == 1){
+            player_won = true;
+        } else if (field[2] == 0){
+            player_won = false;
+        }
         return true;
     }
 
@@ -160,6 +194,26 @@ bool game_field::draw() {
         }
     }
     return false;
+}
+
+int game_field::get_player_score() const {
+    return player_score;
+}
+
+void game_field::plus_player_score() {
+    player_score++;
+}
+
+void game_field::minus_player_score() {
+    player_score --;
+}
+
+void game_field::restart_player_score() {
+    player_score = 0;
+}
+
+bool game_field::get_player_won_status() const {
+    return player_won;
 }
 
 void X_o::wait_for_menu(){
@@ -387,6 +441,16 @@ void X_o::player_make_a_turn(sf::RenderWindow &_window) {
         }
 }
 
+void X_o::score_on_screen(sf::Text &_text, sf::RenderWindow &_window) {
+
+    std::ostringstream player_score_string;    // int to string
+    player_score_string << get_player_score();		//put the player score to ostringstream object
+
+    _text.setString("Score: " + player_score_string.str());//задает строку тексту
+    _text.setPosition(150,215);
+
+    _window.draw(_text);//рисую этот текст
+}
 
 
 all_objects_of_field::~all_objects_of_field() {
