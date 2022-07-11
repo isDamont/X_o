@@ -1,3 +1,4 @@
+#include <utility>
 #include "head.h"
 
 int32_t getRandomNum(int32_t min, int32_t max){
@@ -216,6 +217,10 @@ bool game_field::get_player_won_status() const {
     return player_won;
 }
 
+void game_field::set_player_score(int score) {
+player_score = score;
+}
+
 void X_o::wait_for_menu(){
     if (menu::look_for_action){
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -311,7 +316,7 @@ void X_o::start_game(sf::RenderWindow &_window, int thinking) {
 
 }
 
-X_o::X_o() = default;
+X_o::X_o() : player_name("X_o"){}
 
 void X_o::window_update(sf::RenderWindow &_window, all_objects_of_field &_obj) {
     //x objects to display
@@ -446,10 +451,18 @@ void X_o::score_on_screen(sf::Text &_text, sf::RenderWindow &_window) {
     std::ostringstream player_score_string;    // int to string
     player_score_string << get_player_score();		//put the player score to ostringstream object
 
-    _text.setString("Score: " + player_score_string.str());//задает строку тексту
+    _text.setString("Score: " + player_score_string.str());
     _text.setPosition(150,215);
 
-    _window.draw(_text);//рисую этот текст
+    _window.draw(_text);
+}
+
+std::string X_o::get_player_name() {
+    return player_name;
+}
+
+void X_o::set_player_name(std::string name) {
+    player_name = std::move(name);
 }
 
 
@@ -529,6 +542,144 @@ _window.draw(exit_button);
 _window.draw(continue_button);
 
 _window.display();
+
+}
+
+profile::profile() {
+    save_file = new std::string[6];
+    for (int i = 0; i < 6; ++i) {
+        *(save_file+i) = '0';
+    }
+    num_of_slot_in_use = 0;
+}
+
+void profile::save(int num_of_slot) {
+    std::ostringstream player_score_slot;           // int to string
+    player_score_slot << get_player_score();		//put the player score to ostringstream object
+
+    switch (num_of_slot) {
+        case 1:{
+            //slot 1
+            save_file[0] = player_score_slot.str();
+            save_file[1] = get_player_name();
+            break;
+        }
+        case 2:{
+            //slot 2
+            save_file[2] = player_score_slot.str();
+            save_file[3] = get_player_name();
+            break;
+        }
+        case 3:{
+            //slot 3
+            save_file[4] = player_score_slot.str();
+            save_file[5] = get_player_name();
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void profile::open(int num_of_slot) {
+    std::ostringstream player_score_slot;           // int to string
+int score;
+
+    switch (num_of_slot) {
+        case 1:{
+            //slot 1
+            player_score_slot.str(save_file[0]);
+            score = atoi(player_score_slot.str().c_str());
+            set_player_score(score);
+            set_player_name(save_file[1]);
+        }
+        case 2:{
+            //slot 2
+            player_score_slot.str(save_file[2]);
+            score = atoi(player_score_slot.str().c_str());
+            set_player_score(score);
+            set_player_name(save_file[3]);
+        }
+        case 3:{
+            //slot 3
+            player_score_slot.str(save_file[4]);
+            score = atoi(player_score_slot.str().c_str());
+            set_player_score(score);
+            set_player_name(save_file[5]);
+        }
+        default:
+            break;
+    }
+}
+
+profile::~profile() {
+delete[] save_file;
+}
+
+void profile::slots_on_screen(sf::RenderWindow &_window) {
+    sf::Texture slots;
+    slots.loadFromFile("../img/buttons/empty.png");
+
+
+    //bg
+    sf::Texture white_bg;
+    white_bg.loadFromFile("../img/white.png");
+    sf::Sprite bg_menu;
+    bg_menu.setTexture(white_bg);
+
+    //set texture to slot 1
+    sf::Sprite slot_1;
+    slot_1.setTexture(slots);
+    slot_1.setPosition(55,40);
+
+    //set texture to slot 2
+    sf::Sprite slot_2;
+    slot_2.setTexture(slots);
+    slot_2.setPosition(55,88);
+
+    //set texture to slot 3
+    sf::Sprite slot_3;
+    slot_3.setTexture(slots);
+    slot_3.setPosition(55,136);
+
+
+    _window.clear();
+    _window.draw(bg_menu);
+
+        if (sf::IntRect(55, 40, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+            slot_1.setColor(sf::Color::Green);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                num_of_slot_in_use = 1;
+                open(num_of_slot_in_use);
+                menu::_continue = true;
+        //action
+            }
+        }
+
+    if (sf::IntRect(55, 88, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+        slot_2.setColor(sf::Color::Green);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            num_of_slot_in_use = 2;
+            open(num_of_slot_in_use);
+     //action
+        }
+    }
+
+    if (sf::IntRect(55, 136, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+        slot_3.setColor(sf::Color::Green);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            num_of_slot_in_use = 3;
+            open(num_of_slot_in_use);
+          //action
+        }
+    }
+
+
+    _window.draw(slot_1);
+    _window.draw(slot_2);
+    _window.draw(slot_3);
+
+    _window.display();
 
 }
 

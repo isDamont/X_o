@@ -7,10 +7,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <random>
 #include <chrono>
 #include <sstream>
+#include <stdlib.h>
 
 
 struct textures_x{
@@ -78,6 +80,7 @@ public:
     [[nodiscard]] int get_player_score() const;
     [[nodiscard]] bool get_player_won_status() const;
     void plus_player_score();
+    void set_player_score(int score);
     void minus_player_score();
     void restart_player_score();
     bool finish();
@@ -99,6 +102,12 @@ struct X_o : public game_field{
     static void wait_for_menu();
     void bot_make_a_turn();
     void score_on_screen(sf::Text & _text, sf::RenderWindow &_window);
+
+    std::string get_player_name();
+    void set_player_name(std::string name);
+
+private:
+    std::string player_name;
 };
 
 
@@ -113,6 +122,18 @@ struct menu : public game_field{
 
 };
 
+class profile : public X_o{
+public:
+    void slots_on_screen(sf::RenderWindow &_window);
+    profile();
+    ~profile();
+    void save(int num_of_slot);
+    void open(int num_of_slot);
+
+private:
+    std::string * save_file;
+    int num_of_slot_in_use;
+};
 
 
 

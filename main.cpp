@@ -2,14 +2,14 @@
 
 int main(){
 
-    sf::RenderWindow window(sf::VideoMode(240, 240), "X_o by isDamont", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(240, 240), "X_o: 0.4_SFML", sf::Style::Close);
     window.setVerticalSyncEnabled(true);
 
     sf::Font font;
-    font.loadFromFile("../ttf/cyrilic_old.TTF");
-    sf::Text text("", font, 20);
-    text.setColor(sf::Color::Black);
-    text.setStyle(sf::Text::Bold);
+    font.loadFromFile("../ttf/YouTube Sans Light.ttf");
+    sf::Text score("", font, 20);
+    score.setColor(sf::Color::Black);
+    score.setStyle(sf::Text::Bold);
 
     sf::Clock think;
     sf::Clock clock;
@@ -24,9 +24,69 @@ int time_now_int;
 
 
     all_objects_of_field obj;
-    auto* game = new X_o;
+    auto* game = new profile;
+
+
+
+    //pre_start
+
+    sf::Text ver("", font, 10);
+    ver.setColor(sf::Color::White);
+    ver.setString("ver. 0.4_SFML");
+    ver.setPosition(180,5);
+
+    sf::Text author("", font, 15);
+    author.setColor(sf::Color::White);
+    author.setString(" dev by isDamont\n github.com/isDamont\n t.me/Damont");
+    author.setPosition(5,176);
+
+
+    sf::Texture pre_start_texture;
+    pre_start_texture.loadFromFile("../img/black.png");
+    sf::Sprite pre_start_sprite;
+    pre_start_sprite.setTexture(pre_start_texture);
 
     while (window.isOpen()){
+        sf::Event event{};
+        while (window.pollEvent(event)){
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {break;}
+        if (clock.getElapsedTime().asSeconds() > 3) {break;}
+
+
+        window.draw(pre_start_sprite);
+        window.draw(ver);
+        window.draw(author);
+        window.display();
+        window.clear();
+
+
+    }
+    //pre_start
+
+    //start_menu
+
+    while (window.isOpen()){
+        sf::Event event{};
+        while (window.pollEvent(event)){
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+
+        game ->slots_on_screen(window);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {break;}
+
+
+    }
+
+    //start_menu!
+
+    while (window.isOpen()){
+
 
         //time
        int thinking = think.getElapsedTime().asMilliseconds();
@@ -56,10 +116,11 @@ if (!menu::look_for_action){
                     menu::field_was_restarted = true;
                 }
 
-
+              /*
                 if(clock.getElapsedTime().asSeconds() > 50){
                     clock.restart();
                 }
+              */
 
                 if (!time_now){
                     time_now_int = static_cast<int>(clock.getElapsedTime().asSeconds());
@@ -77,7 +138,7 @@ if (!menu::look_for_action){
                 if(menu::run_game){game -> start_game(window, thinking);}
 
                 game -> window_update(window, obj);
-                game -> score_on_screen(text,window);
+                game -> score_on_screen(score,window);
 
                 if (game -> finish()){
                     if(game -> get_player_won_status()){game -> plus_player_score(); std::cout<< "Player WON !!"<<std::endl;}
@@ -89,7 +150,6 @@ if (!menu::look_for_action){
                 }
 
                 if (game -> draw()){
-                    std::cout<< "draw !!"<<std::endl;
                     game -> field_restart();
                     game -> bot_turn = false;
                     time_now = false;
