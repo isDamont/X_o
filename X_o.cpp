@@ -508,7 +508,7 @@ void menu::buttons_on_the_screen(sf::RenderWindow &_window, sf::Text& _text, sf:
     sf::Text countdown("", _font, 15);
     countdown.setFillColor(sf::Color::Black);
     countdown.setString(clock_str.str());
-    countdown.setPosition(100,5);
+    countdown.setPosition(55,215);
 
 _window.clear();
 _window.draw(bg_menu);
@@ -553,7 +553,7 @@ _window.draw(continue_button);
 if(1 - _clock.getElapsedTime().asSeconds() > 0){
 _window.draw(countdown);
 } else {
-    countdown.setString("Ready to play :D");
+    countdown.setString("You are ready to play :D");
     _window.draw(countdown);
 }
 _window.display();
