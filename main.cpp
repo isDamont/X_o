@@ -8,10 +8,10 @@ int main(){
     sf::Font font;
     font.loadFromFile("../ttf/YouTube Sans Light.ttf");
     sf::Text score("", font, 20);
-    score.setColor(sf::Color::Black);
+    score.setFillColor(sf::Color::Black);
     score.setStyle(sf::Text::Bold);
 
-    //enter name text objects
+    //text objects
     sf::Texture white_bg;
     white_bg.loadFromFile("../img/white.png");
     sf::Sprite bg_menu;
@@ -19,13 +19,18 @@ int main(){
 
     sf::Text Enter("", font, 20);
     Enter.setStyle(sf::Text::Bold);
-    Enter.setColor(sf::Color::Black);
+    Enter.setFillColor(sf::Color::Black);
     Enter.setString("Enter your nickname: ");
-    Enter.setPosition(5,5);
+    Enter.setPosition(20,7);
 
     sf::Text nickname("", font, 20);
-    nickname.setColor(sf::Color::Black);
-    nickname.setPosition(5,40);
+    nickname.setFillColor(sf::Color::Black);
+    nickname.setPosition(60,48);
+
+    sf::Text slot("", font, 20);
+    slot.setStyle(sf::Text::Bold);
+    slot.setFillColor(sf::Color::Black);
+
 
 
 
@@ -51,12 +56,12 @@ std::string str;
     //pre_start
 
     sf::Text ver("", font, 10);
-    ver.setColor(sf::Color::White);
+    ver.setFillColor(sf::Color::White);
     ver.setString("ver. 0.4_SFML");
     ver.setPosition(180,5);
 
     sf::Text author("", font, 15);
-    author.setColor(sf::Color::White);
+    author.setFillColor(sf::Color::White);
     author.setString(" dev by isDamont\n github.com/isDamont\n t.me/Damont");
     author.setPosition(5,176);
 
@@ -88,7 +93,7 @@ std::string str;
     //pre_start
 
     //start_menu
-
+    start_menu:
     while (window.isOpen()){
         sf::Event event{};
         while (window.pollEvent(event)){
@@ -96,17 +101,25 @@ std::string str;
                 window.close();
         }
         window.clear();
-
         game ->slots_on_screen(window, font);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {break;}
         if (profile::to_new_name) {break;}
+        if (profile::next_menu) {break;}
 
 
     }
-
     //start_menu!
 
     //new_name
+    sf::Texture enter_name_spot;
+    enter_name_spot.loadFromFile("../img/name.png");
+    sf::Sprite enter_name_spot_sprite;
+    enter_name_spot_sprite.setTexture(enter_name_spot);
+    enter_name_spot_sprite.setPosition(50, 40);
+
+    slot.setString("slot # " + game -> get_slot_num_str());
+    slot.setPosition(20,150);
+
+    char cursor = '|';
 
         while (window.isOpen() && profile::to_new_name){
             sf::Event event{};
@@ -115,20 +128,62 @@ std::string str;
                     window.close();
             }
 
+if (static_cast<int>(clock.getElapsedTime().asSeconds()) % 2 == 0){nickname.setString(str + cursor);}
+else{nickname.setString(str);}
+
 
             if (event.type == sf::Event::TextEntered){
+
                 if (event.text.unicode < 128) {
-                    str += static_cast<char>(event.text.unicode);
-                    nickname.setString(str);
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
+                        if(!str.empty()){str.pop_back();}
+                    }
+                    if(str.size()<9){
+                        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace) &&
+                            !sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) &&
+                            !sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
+                        str += static_cast<char>(event.text.unicode);
+                    }
+                        if (static_cast<int>(clock.getElapsedTime().asSeconds()) % 2 == 0){nickname.setString(str + cursor);}
+                        else{nickname.setString(str);}
+                    }
                 }
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {break;}
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {profile::to_new_name = false; goto start_menu;}
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !str.empty()) {
+                game ->set_player_name(str);
+                game ->save(game->get_slot_num());
+                break;
+            }
 
             window.clear();
             window.draw(bg_menu);
+
+            if (str.size() == 9){
+                sf::Text max("", font, 15);
+                max.setFillColor(sf::Color::Red);
+                max.setString("Max length 9 characters");
+                max.setPosition(40,80);
+                window.draw(max);
+            }
+
+            if (str.empty()){
+                sf::Text max("", font, 15);
+                max.setFillColor(sf::Color::Red);
+                max.setString("Cannot be empty!");
+                max.setPosition(60,80);
+                window.draw(max);
+            }
+
+            ver.setFillColor(sf::Color::Black);
+            ver.setPosition(90,225);
+
+            window.draw(ver);
             window.draw(Enter);
+            window.draw(enter_name_spot_sprite);
             window.draw(nickname);
+            window.draw(slot);
             window.display();
 
         }
@@ -136,7 +191,17 @@ std::string str;
 
     //new_name!
 
+
+    nickname.setString("Welcome,\n" + game -> get_player_name() + " !!!");
+    nickname.setPosition(5,0);
+    nickname.setCharacterSize(15);
+
+    clock.restart();
+
+    sf::Clock pause_slot;
+
     while (window.isOpen()){
+
         //time
        int thinking = think.getElapsedTime().asMilliseconds();
        think.restart();
@@ -149,9 +214,12 @@ std::string str;
         }
 
 if (!menu::look_for_action){
-    menu::buttons_on_the_screen(window);
+    menu::buttons_on_the_screen(window, nickname, clock);
     time_now = false;
     menu::run_game = false;
+    if(pause_slot.getElapsedTime().asSeconds() > 1){  //pause for miss click
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){profile::next_menu = false; goto start_menu;}
+    }
     }
 
         switch (menu::_switch) {
@@ -188,6 +256,7 @@ if (!menu::look_for_action){
 
                 game -> window_update(window, obj);
                 game -> score_on_screen(score,window);
+                pause_slot.restart();
 
                 if (game -> finish()){
                     if(game -> get_player_won_status()){game -> plus_player_score(); std::cout<< "Player WON !!"<<std::endl;}

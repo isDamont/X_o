@@ -12,7 +12,7 @@
 #include <random>
 #include <chrono>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 
 
 struct textures_x{
@@ -113,7 +113,7 @@ private:
 
 struct menu : public game_field{
     menu();
-    static void buttons_on_the_screen(sf::RenderWindow &_window);
+    static void buttons_on_the_screen(sf::RenderWindow &_window, sf::Text & _text, sf::Clock _clock);
     inline static unsigned _switch = 0;
     inline static bool look_for_action = false;
     inline static bool run_game = false;
@@ -129,8 +129,9 @@ public:
     profile();
     ~profile();
     void save(int num_of_slot);
-    void open(int num_of_slot);
-
+    void open(int num_of_slot = 0);
+    [[nodiscard]] int get_slot_num() const;
+    [[nodiscard]] std::string get_slot_num_str() const;
 
     inline static bool to_new_name = false;
     inline static bool next_menu = false;

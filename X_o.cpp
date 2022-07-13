@@ -1,4 +1,3 @@
-#include <utility>
 #include "head.h"
 
 int32_t getRandomNum(int32_t min, int32_t max){
@@ -474,7 +473,7 @@ o_obj.clear();
 menu::menu() = default;
 
 
-void menu::buttons_on_the_screen(sf::RenderWindow &_window) {
+void menu::buttons_on_the_screen(sf::RenderWindow &_window, sf::Text & _text, sf::Clock _clock) {
     //set texture to play button
     sf::Texture play_texture;
     play_texture.loadFromFile("../img/buttons/new_game.png");
@@ -506,13 +505,14 @@ void menu::buttons_on_the_screen(sf::RenderWindow &_window) {
 _window.clear();
 _window.draw(bg_menu);
 
+if(_clock.getElapsedTime().asSeconds() > 1){  //pause for missclick
+
 if (_continue) {
     if (sf::IntRect(55, 40, 131, 37).contains(sf::Mouse::getPosition(_window))) {
         continue_button.setColor(sf::Color::Green);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             _switch = 1;
             look_for_action = true;
-
         }
     }
 }else{
@@ -535,8 +535,9 @@ if (_continue) {
             look_for_action = true;
         }
     }
+}
 
-
+_window.draw(_text);
 _window.draw(play_button);
 _window.draw(exit_button);
 _window.draw(continue_button);
@@ -547,15 +548,25 @@ _window.display();
 
 profile::profile() {
     save_file = new std::string[6];
+    std::fstream f_in;
+    f_in.open("save.xo", std::ios::in);
     for (int i = 0; i < 6; ++i) {
-        *(save_file+i) = "0";
+       f_in >> *(save_file+i);
     }
+    if(save_file->empty()){
+        for (int i = 0; i < 6; ++i) {
+            save_file[i] = "0";
+        }
+    }
+    f_in.close();
     num_of_slot_in_use = 0;
 }
 
 void profile::save(int num_of_slot) {
     std::ostringstream player_score_slot;           // int to string
     player_score_slot << get_player_score();		//put the player score to ostringstream object
+
+    std::ofstream f_out;
 
     switch (num_of_slot) {
         case 1:{
@@ -579,10 +590,20 @@ void profile::save(int num_of_slot) {
         default:
             break;
     }
+
+    f_out.open("save.xo", std::ios::out);
+
+    for (int i = 0; i < 6; ++i) {
+       f_out << *(save_file+i) << " ";
+    }
+
+    f_out.close();
+
 }
 
 void profile::open(int num_of_slot) {
     std::ostringstream player_score_slot;           // int to string
+
 int score;
 
     switch (num_of_slot) {
@@ -592,6 +613,7 @@ int score;
             score = atoi(player_score_slot.str().c_str());
             set_player_score(score);
             set_player_name(save_file[1]);
+            break;
         }
         case 2:{
             //slot 2
@@ -599,6 +621,7 @@ int score;
             score = atoi(player_score_slot.str().c_str());
             set_player_score(score);
             set_player_name(save_file[3]);
+            break;
         }
         case 3:{
             //slot 3
@@ -606,14 +629,24 @@ int score;
             score = atoi(player_score_slot.str().c_str());
             set_player_score(score);
             set_player_name(save_file[5]);
+            break;
         }
         default:
             break;
     }
+    std::ifstream f_in;
+    f_in.open("save.xo", std::ios::in);
+
+    for (int i = 0; i < 6; ++i) {
+        f_in >> *(save_file+i);
+    }
+
+    f_in.close();
 }
 
 profile::~profile() {
-delete[] save_file;
+    save(num_of_slot_in_use);
+    delete[] save_file;
 }
 
 void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
@@ -621,7 +654,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
     slots.loadFromFile("../img/buttons/empty.png");
 
     sf::Text slot("", _font, 15);
-    slot.setColor(sf::Color::Black);
+    slot.setFillColor(sf::Color::Black);
 
     //bg
     sf::Texture white_bg;
@@ -631,7 +664,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
 
     sf::Text choose("", _font, 20);
     choose.setStyle(sf::Text::Bold);
-    choose.setColor(sf::Color::Black);
+    choose.setFillColor(sf::Color::Black);
     choose.setString("choose a save slot:");
     choose.setPosition(40,5);
 
@@ -663,6 +696,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
                 }else{
                 open(num_of_slot_in_use);
                 profile::next_menu = true;
+                menu::_continue = true;
                 }
         //action
             }
@@ -677,6 +711,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
             }else{
                 open(num_of_slot_in_use);
                 profile::next_menu = true;
+                menu::_continue = true;
             }
      //action
         }
@@ -691,6 +726,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
             }else{
                 open(num_of_slot_in_use);
                 profile::next_menu = true;
+                menu::_continue = true;
             }
           //action
         }
@@ -705,7 +741,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
         _window.draw(slot);
     } else {
         slot.setString(save_file[1]);
-        slot.setPosition(95,57);
+        slot.setPosition(90,57);
         _window.draw(slot);
     }
 
@@ -716,7 +752,7 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
         _window.draw(slot);
     } else {
         slot.setString(save_file[3]);
-        slot.setPosition(95,106);
+        slot.setPosition(90,106);
         _window.draw(slot);
     }
 
@@ -727,12 +763,22 @@ void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
         _window.draw(slot);
     } else {
         slot.setString(save_file[5]);
-        slot.setPosition(95,155);
+        slot.setPosition(90,155);
         _window.draw(slot);
     }
 
     _window.display();
 
+}
+
+int profile::get_slot_num() const {
+return num_of_slot_in_use;
+}
+
+std::string profile::get_slot_num_str() const {
+    std::ostringstream slot;           // int to string
+    slot << num_of_slot_in_use;
+    return slot.str();
 }
 
 
