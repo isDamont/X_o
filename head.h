@@ -113,7 +113,7 @@ private:
 
 struct menu : public game_field{
     menu();
-    static void buttons_on_the_screen(sf::RenderWindow &_window, sf::Text & _text, sf::Clock _clock);
+    static void buttons_on_the_screen(sf::RenderWindow &_window, sf::Text & _text, sf::Clock _clock, sf::Font& _font);
     inline static unsigned _switch = 0;
     inline static bool look_for_action = false;
     inline static bool run_game = false;

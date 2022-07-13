@@ -25,9 +25,9 @@ sf::Sprite X::get_sprite_x() {
 
 textures_x::textures_x() {
     textures_.reserve(9);
-    textures_ = {"../img/x/x.png", "../img/x/x1.png", "../img/x/x2.png", "../img/x/x3.png",
-                "../img/x/x4.png", "../img/x/x5.png", "../img/x/x6.png", "../img/x/x7.png",
-                "../img/x/x8.png"};
+    textures_ = {"img/x/x.png", "img/x/x1.png", "img/x/x2.png", "img/x/x3.png",
+                "img/x/x4.png", "img/x/x5.png", "img/x/x6.png", "img/x/x7.png",
+                "img/x/x8.png"};
     shuffle(textures_.begin(),textures_.end(), std::mt19937(std::random_device()()));
     texture = textures_[getRandomNum(0,8)];
 }
@@ -38,9 +38,9 @@ textures_.clear();
 
 textures_o::textures_o() {
     textures_.reserve(9);
-    textures_ = {"../img/o/o.png", "../img/o/o1.png", "../img/o/o2.png", "../img/o/o3.png",
-                 "../img/o/o4.png", "../img/o/o5.png", "../img/o/o6.png", "../img/o/o7.png",
-                 "../img/o/o8.png"};
+    textures_ = {"img/o/o.png", "img/o/o1.png", "img/o/o2.png", "img/o/o3.png",
+                 "img/o/o4.png", "img/o/o5.png", "img/o/o6.png", "img/o/o7.png",
+                 "img/o/o8.png"};
     shuffle(textures_.begin(),textures_.end(), std::mt19937(std::random_device()()));
     texture = textures_[getRandomNum(0,8)];
 }
@@ -473,10 +473,10 @@ o_obj.clear();
 menu::menu() = default;
 
 
-void menu::buttons_on_the_screen(sf::RenderWindow &_window, sf::Text & _text, sf::Clock _clock) {
+void menu::buttons_on_the_screen(sf::RenderWindow &_window, sf::Text& _text, sf::Clock _clock, sf::Font& _font) {
     //set texture to play button
     sf::Texture play_texture;
-    play_texture.loadFromFile("../img/buttons/new_game.png");
+    play_texture.loadFromFile("img/buttons/new_game.png");
     sf::Sprite play_button;
     play_button.setTexture(play_texture);
     play_button.setPosition(55,88);
@@ -484,23 +484,31 @@ void menu::buttons_on_the_screen(sf::RenderWindow &_window, sf::Text & _text, sf
 
     //set texture to exit button
     sf::Texture exit_texture;
-    exit_texture.loadFromFile("../img/buttons/quit.png");
+    exit_texture.loadFromFile("img/buttons/quit.png");
     sf::Sprite exit_button;
     exit_button.setTexture(exit_texture);
     exit_button.setPosition(70,140);
 
     //bg
     sf::Texture white_bg;
-    white_bg.loadFromFile("../img/white.png");
+    white_bg.loadFromFile("img/white.png");
     sf::Sprite bg_menu;
     bg_menu.setTexture(white_bg);
 
     //set texture to continue button
     sf::Texture continue_texture;
-    continue_texture.loadFromFile("../img/buttons/continue.png");
+    continue_texture.loadFromFile("img/buttons/continue.png");
     sf::Sprite continue_button;
     continue_button.setTexture(continue_texture);
     continue_button.setPosition(55,40);
+
+    //Countdown
+    std::stringstream clock_str;
+    clock_str << 1 - _clock.getElapsedTime().asSeconds();
+    sf::Text countdown("", _font, 15);
+    countdown.setFillColor(sf::Color::Black);
+    countdown.setString(clock_str.str());
+    countdown.setPosition(100,5);
 
 _window.clear();
 _window.draw(bg_menu);
@@ -542,6 +550,12 @@ _window.draw(play_button);
 _window.draw(exit_button);
 _window.draw(continue_button);
 
+if(1 - _clock.getElapsedTime().asSeconds() > 0){
+_window.draw(countdown);
+} else {
+    countdown.setString("Ready to play :D");
+    _window.draw(countdown);
+}
 _window.display();
 
 }
@@ -651,14 +665,14 @@ profile::~profile() {
 
 void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
     sf::Texture slots;
-    slots.loadFromFile("../img/buttons/empty.png");
+    slots.loadFromFile("img/buttons/empty.png");
 
     sf::Text slot("", _font, 15);
     slot.setFillColor(sf::Color::Black);
 
     //bg
     sf::Texture white_bg;
-    white_bg.loadFromFile("../img/white.png");
+    white_bg.loadFromFile("img/white.png");
     sf::Sprite bg_menu;
     bg_menu.setTexture(white_bg);
 

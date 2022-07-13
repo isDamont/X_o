@@ -6,14 +6,14 @@ int main(){
     window.setVerticalSyncEnabled(true);
 
     sf::Font font;
-    font.loadFromFile("../ttf/YouTube Sans Light.ttf");
+    font.loadFromFile("ttf/YouTube Sans Light.ttf");
     sf::Text score("", font, 20);
     score.setFillColor(sf::Color::Black);
     score.setStyle(sf::Text::Bold);
 
     //text objects
     sf::Texture white_bg;
-    white_bg.loadFromFile("../img/white.png");
+    white_bg.loadFromFile("img/white.png");
     sf::Sprite bg_menu;
     bg_menu.setTexture(white_bg);
 
@@ -43,7 +43,7 @@ std::string str;
 
 
     sf::Texture scene;
-    scene.loadFromFile("../img/scene.png");
+    scene.loadFromFile("img/scene.png");
     sf::Sprite main;
     main.setTexture(scene);
 
@@ -67,7 +67,7 @@ std::string str;
 
 
     sf::Texture pre_start_texture;
-    pre_start_texture.loadFromFile("../img/black.png");
+    pre_start_texture.loadFromFile("img/black.png");
     sf::Sprite pre_start_sprite;
     pre_start_sprite.setTexture(pre_start_texture);
 
@@ -111,7 +111,7 @@ std::string str;
 
     //new_name
     sf::Texture enter_name_spot;
-    enter_name_spot.loadFromFile("../img/name.png");
+    enter_name_spot.loadFromFile("img/name.png");
     sf::Sprite enter_name_spot_sprite;
     enter_name_spot_sprite.setTexture(enter_name_spot);
     enter_name_spot_sprite.setPosition(50, 40);
@@ -214,7 +214,7 @@ else{nickname.setString(str);}
         }
 
 if (!menu::look_for_action){
-    menu::buttons_on_the_screen(window, nickname, clock);
+    menu::buttons_on_the_screen(window, nickname, clock, font);
     time_now = false;
     menu::run_game = false;
     if(pause_slot.getElapsedTime().asSeconds() > 1){  //pause for miss click
