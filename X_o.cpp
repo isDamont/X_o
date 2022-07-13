@@ -548,7 +548,7 @@ _window.display();
 profile::profile() {
     save_file = new std::string[6];
     for (int i = 0; i < 6; ++i) {
-        *(save_file+i) = '0';
+        *(save_file+i) = "0";
     }
     num_of_slot_in_use = 0;
 }
@@ -616,10 +616,12 @@ profile::~profile() {
 delete[] save_file;
 }
 
-void profile::slots_on_screen(sf::RenderWindow &_window) {
+void profile::slots_on_screen(sf::RenderWindow &_window, sf::Font &_font) {
     sf::Texture slots;
     slots.loadFromFile("../img/buttons/empty.png");
 
+    sf::Text slot("", _font, 15);
+    slot.setColor(sf::Color::Black);
 
     //bg
     sf::Texture white_bg;
@@ -627,59 +629,110 @@ void profile::slots_on_screen(sf::RenderWindow &_window) {
     sf::Sprite bg_menu;
     bg_menu.setTexture(white_bg);
 
+    sf::Text choose("", _font, 20);
+    choose.setStyle(sf::Text::Bold);
+    choose.setColor(sf::Color::Black);
+    choose.setString("choose a save slot:");
+    choose.setPosition(40,5);
+
     //set texture to slot 1
     sf::Sprite slot_1;
     slot_1.setTexture(slots);
-    slot_1.setPosition(55,40);
+    slot_1.setPosition(55,50);
 
     //set texture to slot 2
     sf::Sprite slot_2;
     slot_2.setTexture(slots);
-    slot_2.setPosition(55,88);
+    slot_2.setPosition(55,98);
 
     //set texture to slot 3
     sf::Sprite slot_3;
     slot_3.setTexture(slots);
-    slot_3.setPosition(55,136);
+    slot_3.setPosition(55,146);
 
 
     _window.clear();
     _window.draw(bg_menu);
 
-        if (sf::IntRect(55, 40, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+        if (sf::IntRect(55, 50, 131, 37).contains(sf::Mouse::getPosition(_window))) {
             slot_1.setColor(sf::Color::Green);
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 num_of_slot_in_use = 1;
+                if(save_file[1] == "0"){
+                    profile::to_new_name = true;
+                }else{
                 open(num_of_slot_in_use);
-                menu::_continue = true;
+                profile::next_menu = true;
+                }
         //action
             }
         }
 
-    if (sf::IntRect(55, 88, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+    if (sf::IntRect(55, 98, 131, 37).contains(sf::Mouse::getPosition(_window))) {
         slot_2.setColor(sf::Color::Green);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             num_of_slot_in_use = 2;
-            open(num_of_slot_in_use);
+            if(save_file[3] == "0"){
+                profile::to_new_name = true;
+            }else{
+                open(num_of_slot_in_use);
+                profile::next_menu = true;
+            }
      //action
         }
     }
 
-    if (sf::IntRect(55, 136, 131, 37).contains(sf::Mouse::getPosition(_window))) {
+    if (sf::IntRect(55, 146, 131, 37).contains(sf::Mouse::getPosition(_window))) {
         slot_3.setColor(sf::Color::Green);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             num_of_slot_in_use = 3;
-            open(num_of_slot_in_use);
+            if(save_file[5] == "0"){
+                profile::to_new_name = true;
+            }else{
+                open(num_of_slot_in_use);
+                profile::next_menu = true;
+            }
           //action
         }
     }
 
+    _window.draw(choose);
 
     _window.draw(slot_1);
+    if (save_file[1] == "0"){
+        slot.setString("(empty)");
+        slot.setPosition(95,57);
+        _window.draw(slot);
+    } else {
+        slot.setString(save_file[1]);
+        slot.setPosition(95,57);
+        _window.draw(slot);
+    }
+
     _window.draw(slot_2);
+    if (save_file[3] == "0"){
+        slot.setString("(empty)");
+        slot.setPosition(95,106);
+        _window.draw(slot);
+    } else {
+        slot.setString(save_file[3]);
+        slot.setPosition(95,106);
+        _window.draw(slot);
+    }
+
     _window.draw(slot_3);
+    if (save_file[5] == "0"){
+        slot.setString("(empty)");
+        slot.setPosition(95,155);
+        _window.draw(slot);
+    } else {
+        slot.setString(save_file[5]);
+        slot.setPosition(95,155);
+        _window.draw(slot);
+    }
 
     _window.display();
 
 }
+
 

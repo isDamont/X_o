@@ -124,12 +124,16 @@ struct menu : public game_field{
 
 class profile : public X_o{
 public:
-    void slots_on_screen(sf::RenderWindow &_window);
+    void slots_on_screen(sf::RenderWindow &_window, sf::Font &_font);
+
     profile();
     ~profile();
     void save(int num_of_slot);
     void open(int num_of_slot);
 
+
+    inline static bool to_new_name = false;
+    inline static bool next_menu = false;
 private:
     std::string * save_file;
     int num_of_slot_in_use;

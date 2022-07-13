@@ -11,10 +11,30 @@ int main(){
     score.setColor(sf::Color::Black);
     score.setStyle(sf::Text::Bold);
 
+    //enter name text objects
+    sf::Texture white_bg;
+    white_bg.loadFromFile("../img/white.png");
+    sf::Sprite bg_menu;
+    bg_menu.setTexture(white_bg);
+
+    sf::Text Enter("", font, 20);
+    Enter.setStyle(sf::Text::Bold);
+    Enter.setColor(sf::Color::Black);
+    Enter.setString("Enter your nickname: ");
+    Enter.setPosition(5,5);
+
+    sf::Text nickname("", font, 20);
+    nickname.setColor(sf::Color::Black);
+    nickname.setPosition(5,40);
+
+
+
+
     sf::Clock think;
     sf::Clock clock;
 bool time_now = false;
 int time_now_int;
+std::string str;
 
 
     sf::Texture scene;
@@ -77,17 +97,46 @@ int time_now_int;
         }
         window.clear();
 
-        game ->slots_on_screen(window);
+        game ->slots_on_screen(window, font);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {break;}
+        if (profile::to_new_name) {break;}
 
 
     }
 
     //start_menu!
 
+    //new_name
+
+        while (window.isOpen() && profile::to_new_name){
+            sf::Event event{};
+            while (window.pollEvent(event)){
+                if (event.type == sf::Event::Closed)
+                    window.close();
+            }
+
+
+            if (event.type == sf::Event::TextEntered){
+                if (event.text.unicode < 128) {
+                    str += static_cast<char>(event.text.unicode);
+                    nickname.setString(str);
+                }
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {break;}
+
+            window.clear();
+            window.draw(bg_menu);
+            window.draw(Enter);
+            window.draw(nickname);
+            window.display();
+
+        }
+
+
+    //new_name!
+
     while (window.isOpen()){
-
-
         //time
        int thinking = think.getElapsedTime().asMilliseconds();
        think.restart();
